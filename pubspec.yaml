@@ -1,0 +1,8 @@
+name:  turp
+description:  Some tiny samples
+
+dependencies:
+  polymer: any
+  unittest: any
+  game_loop:
+    git: https://github.com/johnmccutchan/game_loop.git
