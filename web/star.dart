@@ -9,36 +9,35 @@ class Star {
   int edges;
   String color;
   int thickness;
-  int x;
-  int y;
+  Point origin;
+  double _step;
+  double innerAngle;
 
-  Star(this.x, this.y, this.r1, this.edges) {
+  Star(this.origin, this.r1, this.edges) {
     startAngle = 0.0;
-    ratio = 0.4;
     thickness = 2;
     color = '#ffaa00';
+    _step = 2 * PI / edges;
+    innerAngle = _step / 2;
   }
 
+  Point calculatePolar(Point origin, double angle, double radius) =>
+     new Point(origin.x + (radius * cos(angle)),
+               origin.y + (radius * sin(angle)));
+
   void draw(CanvasRenderingContext2D context) {
-    double step = 2 * PI / edges;
-    double innerAngle = step / 2;
+    context.beginPath();
     double r2 = r1 * ratio;
 
-    context.beginPath();
-
     for (int i = 0; i < edges + 1; i++) {
-      double px = x + (r1 * cos(startAngle + i * step));
-      double py = y + (r1 * sin(startAngle + i * step));
-
-      double tx = x + (r2 * cos(innerAngle + i * step));
-      double ty = y + (r2 * sin(innerAngle + i * step));
-
+      Point outer = calculatePolar(origin, startAngle + i * _step, r1);
+      Point inner = calculatePolar(origin, innerAngle + i * _step, r2);
       if (i == 0) {
-        context.moveTo(px, py);
-        context.lineTo(tx, ty);
+        context.moveTo(outer.x, outer.y);
+        context.lineTo(inner.x, inner.y);
       } else {
-        context.lineTo(px, py);
-        context.lineTo(tx, ty);
+        context.lineTo(outer.x, outer.y);
+        context.lineTo(inner.x, inner.y);
       }
     }
     context.lineWidth = thickness;
@@ -47,7 +46,6 @@ class Star {
   }
 
 }
-
 
 void main() {
   CanvasElement canvas = query("#canvas");
@@ -58,14 +56,16 @@ void main() {
   for (int i=0; i<10; i++) {
     int thickness = r.nextInt(5);
     double ratio = r.nextDouble();
-    double size = r.nextInt(100).toDouble() + 10.0;
-    int x = r.nextInt(300);
-    int y = r.nextInt(300);
+    double size = r.nextInt(60).toDouble() + 20.0;
+    int x = r.nextInt(400);
+    int y = r.nextInt(400);
     int edges = r.nextInt(10) + 3;
-    Star st = new Star(x, y, size, edges)..color='#ffaa00'..ratio=ratio..thickness=thickness;
+    Star st = new Star(new Point(x, y), size, edges)
+        ..color='#ffaa00'
+        ..ratio=ratio
+        ..thickness=thickness;
     stars.add(st);
   }
-//  Star s = new Star(250, 250, 100.0, 5);
   gameLoop.onUpdate = ((gameLoop) {
   });
   int i = 0;
@@ -73,7 +73,6 @@ void main() {
     for (Star s in stars) {
       s.draw(context);
     }
-    //s.draw(context);
   });
   gameLoop.start();
 
