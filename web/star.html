@@ -1,17 +1,17 @@
-<!DOCTYPE html>
-
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Star</title>
-    <link rel="stylesheet" href="star.css">
-  </head>
-  <body>    
-    <div id="sample_container_id">
+<polymer-element name="star-demo"> <!-- attributes="count" -->
+  <template>
+    <div>
+      Blah!
       <canvas id="canvas" width="500" height="500"></canvas>
-    </div>
+     <!-- 
+      <button on-click="increment">Click me</button><br>
+      <span>(click count: {{count}})</span>
+     -->
+     <button id="increment-points" on-click="incrementPoints"> + </button>
+          Points: {{points}}
+     <button id="decrement-points" on-click="decrementPoints"> - </button>
 
-    <script type="application/dart" src="star.dart"></script>
-    <script src="packages/browser/dart.js"></script>
-  </body>
-</html>
+    </div>
+  </template>
+  <script type="application/dart" src="star.dart"></script>
+</polymer-element>
